@@ -1,6 +1,4 @@
 import React from 'react'
-// import Submit from '../../components/Submit'
-// import BottomNav from '../../components/BottomNav'
 import './App.css'
 import { transaction, simpleStoreContract } from './simpleStore'
 import nervos from './nervos'
@@ -15,6 +13,19 @@ const Submit = ({ text = '愿此刻永恒', onClick, disabled = false }) => (
   </button>
 )
 
+const Record = ({ time, text, hasYearLabel }) => {
+  const _time = new Date(+time);
+  const timeFormatter = time => ('' + time).padStart(2, '0');
+
+  return (
+    <div className="list__record--container">
+      {hasYearLabel ? <div className="list__record--year">{_time.getFullYear()}</div> : null}
+      <span>{`${_time.getMonth() + 1}-${timeFormatter(_time.getDate())} ${timeFormatter(_time.getHours())}:${timeFormatter(_time.getMinutes())}`}</span>
+      <div>{text}</div>
+    </div>
+  )
+}
+
 const timeFormatter = time => ('' + time).padStart(2, '0')
 
 const submitTexts = {
@@ -23,12 +34,17 @@ const submitTexts = {
   submitted: '保存成功',
 }
 
-class Add extends React.Component {
+class App extends React.Component {
   state = {
     text: '',
     time: new Date(),
     submitText: submitTexts.normal,
     errorText: '',
+    times: [],
+    texts: [],
+  }
+  componentDidMount() {
+    this.fetchList();
   }
   handleInput = e => {
     this.setState({ text: e.target.value })
@@ -61,13 +77,47 @@ class Add extends React.Component {
           throw new Error(receipt.errorMessage)
         }
       })
+      .then(() => {
+        // FIXME: seems it does not work
+        this.fetchList();
+      })
       .catch(err => {
         this.setState({ errorText: JSON.stringify(err) })
       })
   }
+  fetchList() {
+    const from = nervos.base.accounts.wallet[0] ? nervos.base.accounts.wallet[0].address : '';
+    simpleStoreContract.methods
+      .getList()
+      .call({
+        from,
+      })
+      .then(times => {
+        times.reverse()
+        this.setState({ times })
+        return Promise.all(times.map(time => simpleStoreContract.methods.get(time).call({ from })))
+      })
+      .then(texts => {
+        this.setState({ texts })
+      })
+      .catch(console.error)
+  }
   render() {
-    const { time, text, submitText, errorText } = this.state
-    return (
+    const { times, texts, time, text, submitText, errorText } = this.state
+    console.log('render: ', texts)
+    const List = (
+      <div className="list__record--page">
+        {times.map((time, idx) => (
+          <Record
+            time={time}
+            text={texts[idx]}
+            key={time}
+            hasYearLabel={idx === 0 || new Date(+time).getFullYear() !== new Date(+times[idx - 1]).getFullYear()}
+          />
+        ))}
+      </div>
+    );
+    const Add = (
       <div className="add__content--container">
         <div className="add__time--container">
           <span className="add__time--year">{time.getFullYear()}</span>
@@ -93,77 +143,16 @@ class Add extends React.Component {
         />
         <Submit text={submitText} onClick={this.handleSubmit} disabled={submitText !== submitTexts.normal} />
         {errorText && <span className="warning">{errorText}</span>}
-        {/* <BottomNav showAdd={false} /> */}
       </div>
     )
-  }
-}
-
-const Record = ({ time, text, hasYearLabel }) => {
-  const _time = new Date(+time);
-  const timeFormatter = time => ('' + time).padStart(2, '0');
-
-  return (
-    <div className="list__record--container">
-      {hasYearLabel ? <div className="list__record--year">{_time.getFullYear()}</div> : null}
-      <span>{`${_time.getMonth() + 1}-${timeFormatter(_time.getDate())} ${timeFormatter(_time.getHours())}:${timeFormatter(_time.getMinutes())}`}</span>
-      <div>{text}</div>
-    </div>
-  )
-}
-
-class List extends React.Component {
-  state = {
-    times: [],
-    texts: [],
-  }
-  componentDidMount() {
-    this.fetchList();
-  }
-  fetchList() {
-    const from = nervos.base.accounts.wallet[0] ? nervos.base.accounts.wallet[0].address : '';
-    simpleStoreContract.methods
-      .getList()
-      .call({
-        from,
-      })
-      .then(times => {
-        times.reverse()
-        this.setState({ times })
-        return Promise.all(times.map(time => simpleStoreContract.methods.get(time).call({ from })))
-      })
-      .then(texts => {
-        this.setState({ texts })
-      })
-      .catch(console.error)
-  }
-  render() {
-    const { times, texts } = this.state
-    return (
-      <div className="list__record--page">
-        {times.map((time, idx) => (
-          <Record
-            time={time}
-            text={texts[idx]}
-            key={time}
-            hasYearLabel={idx === 0 || new Date(+time).getFullYear() !== new Date(+times[idx - 1]).getFullYear()}
-          />
-        ))}
-        {/* <BottomNav active={'list'} /> */}
-      </div>
-    )
-  }
-}
-
-class App extends React.Component {
-  render() {
     return (
       <div>
-        <Add />
-        <List />
+        {Add}
+        {List}
       </div>
     )
   }
 }
+
 
 export default App
