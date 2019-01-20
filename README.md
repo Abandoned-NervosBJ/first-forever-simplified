@@ -8,7 +8,7 @@ npm i && npm start
 ### 操作系统
 推荐使用Mac或者Ubuntu。
 
-如果使用**Windows， 可以使用虚拟机在Windows系统中安装一个Linux的Ubunut系统，**2种做法都可以：
+如果使用 **Windows， 可以使用虚拟机在Windows系统中安装一个Linux的Ubunut系统，** 2种做法都可以：
 * 虚拟机VirtualBox官网下载 [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads)， 并安装ubunut镜像。
 * 开启 Windows 10 的 Linux 子系统并安装Ubunut镜像，切记是Windows10，不是Windows8，也不是Windows7，版本不能低于Window10，参考： [https://www.jianshu.com/p/UpwXzQ](https://www.jianshu.com/p/UpwXzQ)。
 ### 安装node
@@ -27,6 +27,7 @@ npm install create-react-app -g
 create-react-app first-forever
 ```
 会创建一个名字为first-forever的项目文件夹。
+
 **教练**：解释一下上面都做了什么？
 
 在命令行运行如下命令，运行项目：
@@ -36,9 +37,13 @@ npm i --save @appchain/base
 npm start
 ```
 几秒钟后会自动打开一个网页，表明项目初始化并运行成功。
+
 **教练**：介绍一下一个网页从输入网址到显示内容都经历了什么？介绍一下什么是React和HTML有什么关系？
+
 ## 2 申请测试链代币
+
 ### 生成账户
+
 访问网址获取私钥和地址：
 
 [https://service-exvd0ctl-1258120565.ap-beijing.apigateway.myqcloud.com/release/addr](https://service-exvd0ctl-1258120565.ap-beijing.apigateway.myqcloud.com/release/addr)
@@ -48,8 +53,11 @@ npm start
 于是， account 就到手了。
 
 **教练**：解释一下什么是加密货币钱包？冷钱包和热钱包有啥区别？地址和私钥是什么？为什么私钥很重要？如何保存私钥？
+
 参考：[https://learning.nervos.org/nerv-first/6-wallet](https://learning.nervos.org/nerv-first/6-wallet)
+
 ### 充值 
+
 使用浏览器打开网页 [https://dapp.cryptape.com/faucet/](https://dapp.cryptape.com/faucet/) ，然后输入上一步生成的地址（address），点击 Get Testnet Token 按钮就可以获取免费的代币了。
 
 ![图片](https://img.haoqicat.com/2018091201.jpg)
@@ -61,10 +69,14 @@ npm start
 ![图片](https://img.haoqicat.com/2018091202.jpg)
 
 **教练**：解释一下什么是Nervos？解释一下什么是区块链浏览器？
+
 参考：[https://learning.nervos.org/nerv-first/2-nervos](https://learning.nervos.org/nerv-first/2-nervos)
 Nervos 是一个网络，分上下两层，底层的 CKB 负责安全和共识，上层的各种方案保证性能。Nervos 要为各个企业搭建自己的公链和开发 DApp 提供成套的基础设施，让大家直接上手就能实现自己的想法，而不必重新造轮子。
+
 ## 3 部署智能合约
+
 使用代码编辑器打开创建的first-forever文件夹，在文件夹src/下创建一个文件config.js，添加如下代码：
+
 ```
 const config = {
   chain: 'https://node.cryptape.com',
@@ -116,6 +128,7 @@ module.exports = {
 打开网址 [https://remix.ethereum.org/](https://remix.ethereum.org/) 将下面的代码粘贴到remix的代码编辑区域中，代码也可以从这个网址得到：[https://github.com/NervosBeijingCommunity/first-forever-simplified/blob/master/src/contracts/SimpleStore.sol](https://github.com/NervosBeijingCommunity/first-forever-simplified/blob/master/src/contracts/SimpleStore.sol)
 
 **教练**：介绍一下智能合约和Solidity？Solidity有哪些优点更适合做智能合约开发？
+
 参考：[https://learning.nervos.org/nerv-first/3-dev](https://learning.nervos.org/nerv-first/3-dev)
 [https://learning.nervos.org/nerv-first/4-sol](https://learning.nervos.org/nerv-first/4-sol)
 ```
@@ -276,6 +289,7 @@ module.exports = config
 这样我们合约部分的代码就完成了。
 
 ## 4 与合约交互
+
 清空src/App.js文件内容，添加如下代码：
 ```
 // src/App.js
