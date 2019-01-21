@@ -132,7 +132,7 @@ module.exports = {
 参考：[https://learning.nervos.org/nerv-first/3-dev](https://learning.nervos.org/nerv-first/3-dev)
 [https://learning.nervos.org/nerv-first/4-sol](https://learning.nervos.org/nerv-first/4-sol)
 ```
-pragma solidity ^0.4.24;  // 版本要高于0.4.24才可以编译
+pragma solidity ^0.4.24;  // 版本要等于0.4.24才可以编译
 
 contract SimpleStore {
     mapping (address => mapping (uint256 => string)) private records;
