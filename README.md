@@ -11,10 +11,18 @@ npm i && npm start
 如果使用 **Windows， 可以使用虚拟机在Windows系统中安装一个Linux的Ubunut系统，** 2种做法都可以：
 * 虚拟机VirtualBox官网下载 [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads)， 并安装ubunut镜像。
 * 开启 Windows 10 的 Linux 子系统并安装Ubunut镜像，切记是Windows10，不是Windows8，也不是Windows7，版本不能低于Window10，参考： [https://www.jianshu.com/p/UpwXzQ](https://www.jianshu.com/p/UpwXzQ)。
+
 ### 安装node
 [Node.js](https://nodejs.org/)
-### 安装代码编辑器
-[https://code.visualstudio.com/](https://code.visualstudio.com/)
+
+然后把官方源替换为淘宝源, 国内使用淘宝源下载速度会更快:
+
+`npm config set registry http://registry.npm.taobao.org/`
+
+### 安装代码编辑器 vscode 稳定版, 即Stable版
+
+[visual studio](https://code.visualstudio.com/)
+
 ## 1 创建项目
 在命令行运行如下命令，安装 create-react-app 工具：
 ```
