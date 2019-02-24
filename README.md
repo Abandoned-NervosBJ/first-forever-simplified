@@ -696,6 +696,6 @@ export default App
 
 回到浏览器中，查看页面，如下图所示。这时就可以添加文字并提交到区块链了，刷新页面后就可以看到最新添加的文字了。
 
-![图片](https://uploader.shimo.im/f/GzBlhJST2UUS6ur2.png!thumbnail)
+![图片](./example/img/finish.png)
 
 恭喜你，完成了一个完整的DApp！（完）
