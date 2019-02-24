@@ -10,14 +10,24 @@ npm install && npm start
 ### 操作系统
 推荐使用Mac或者Ubuntu。
 
-如果使用 **Windows， 可以使用虚拟机在Windows系统中安装一个Linux的Ubunut系统，** 2种做法都可以：
-* 虚拟机VirtualBox官网下载 [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads)， 并安装ubunut镜像。
+如果使用 **Windows，可以使用虚拟机在Windows系统中安装一个Linux的Ubunut系统，** 2种做法都可以：
+* 虚拟机VirtualBox官网下载 [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads)，并安装ubunut镜像。
 * 开启 Windows 10 的 Linux 子系统并安装Ubunut镜像，切记是Windows10，不是Windows8，也不是Windows7，版本不能低于Window10，参考： [https://www.jianshu.com/p/UpwXzQ](https://www.jianshu.com/p/UpwXzQ)。
 
 ### 安装node
-[Node.js](https://nodejs.org/)
+直接下载[Node.js](https://nodejs.org/)
 
-安装完之后，把npm的官方源替换为淘宝源，国内使用淘宝源下载速度会更快.
+如果熟悉命令行，可以用 [nvm](https://github.com/creationix/nvm) 安装Node.js
+
+命令如下：
+
+```
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+
+nvm install v10.15.0 # 安装v10.15.0版本的nodejs
+```
+
+安装完之后，把npm的官方源替换为淘宝源，国内使用淘宝源下载速度会更快。
 
 `npm config set registry http://registry.npm.taobao.org/`
 
@@ -29,7 +39,7 @@ npm install && npm start
 在命令行运行如下命令，安装 create-react-app 工具：
 
 ```
-npm install create-react-app -g
+npm install create-react-app -g # g是global的缩写，即全局的意思
 ```
 
 **教练**：解释一下什么是npm和package？上面的命令做了什么？
@@ -38,7 +48,7 @@ npm install create-react-app -g
 ```
 create-react-app first-forever
 ```
-会创建一个名字为first-forever的项目文件夹。
+会创建一个名字为first-forever的项目文件夹
 
 **教练**：解释一下上面都做了什么？
 
@@ -70,7 +80,7 @@ npm ERR! Exit status 1
 
 访问网址获取私钥和地址：
 
-[https://service-exvd0ctl-1258120565.ap-beijing.apigateway.myqcloud.com/release/addr](https://service-exvd0ctl-1258120565.ap-beijing.apigateway.myqcloud.com/release/addr)
+[genEthAddr](https://service-exvd0ctl-1258120565.ap-beijing.apigateway.myqcloud.com/release/addr)
 
 将生成的私钥和地址保存好，后面会用到。
 
@@ -83,13 +93,17 @@ npm ERR! Exit status 1
 特别注意，私钥 privateKey 是不能泄露给任何人的。上面这个账户就是临时用一下，所以无所谓了。
 于是，account 就到手了。
 
-**教练**：解释一下什么是加密货币钱包？冷钱包和热钱包有啥区别？地址和私钥是什么？为什么私钥很重要？如何保存私钥？
+**教练**：
+解释一下什么是加密货币钱包？
+冷钱包和热钱包有啥区别？
+地址和私钥是什么？
+为什么私钥很重要？
 
 参考：[https://learning.nervos.org/nerv-first/6-wallet](https://learning.nervos.org/nerv-first/6-wallet)
 
 ### 充值
 
-使用浏览器打开网页 [https://dapp.cryptape.com/faucet/](https://dapp.cryptape.com/faucet/) ，然后输入上一步生成的地址（address），点击 Get Testnet Token 按钮就可以获取免费的代币了。
+使用浏览器打开网页 [https://dapp.cryptape.com/faucet/](https://dapp.cryptape.com/faucet/) ，然后输入上一步生成的地址(address)，点击 *Get Testnet Token* 按钮就可以获取免费的代币了。
 
 ![图片](https://img.haoqicat.com/2018091201.jpg)
 
