@@ -1,9 +1,11 @@
-最终的代码可以参考：[https://github.com/NervosBeijingCommunity/first-forever-simplified](https://github.com/NervosBeijingCommunity/first-forever-simplified)
-遇到问题如果短时间搞不定，可以参考上面的代码，运行命令：
+
+最终的代码可以参考：[first-forever-simplified](https://github.com/NervosBeijingCommunity/first-forever-simplified) 遇到问题如果短时间搞不定，可以参考上面的代码，运行命令：
+
 ```
-npm i && npm start
+npm install && npm start
 ```
 应该就可以将app跑起来了。
+
 ## 0 环境安装
 ### 操作系统
 推荐使用Mac或者Ubuntu。
@@ -15,19 +17,21 @@ npm i && npm start
 ### 安装node
 [Node.js](https://nodejs.org/)
 
-然后把官方源替换为淘宝源, 国内使用淘宝源下载速度会更快:
+安装完之后，把npm的官方源替换为淘宝源，国内使用淘宝源下载速度会更快.
 
 `npm config set registry http://registry.npm.taobao.org/`
 
-### 安装代码编辑器 vscode 稳定版, 即Stable版
+### 安装代码编辑器 vscode 稳定版，即Stable版
 
 [visual studio](https://code.visualstudio.com/)
 
 ## 1 创建项目
 在命令行运行如下命令，安装 create-react-app 工具：
+
 ```
 npm install create-react-app -g
 ```
+
 **教练**：解释一下什么是npm和package？上面的命令做了什么？
 
 在命令行运行如下命令，创建项目：
@@ -39,12 +43,24 @@ create-react-app first-forever
 **教练**：解释一下上面都做了什么？
 
 在命令行运行如下命令，运行项目：
+
 ```
 cd first-forever
-npm i --save @appchain/base
-npm start
+npm install @appchain/base --save
 ```
-几秒钟后会自动打开一个网页，表明项目初始化并运行成功。
+
+如果有错误提示， 如下：
+
+```
+npm ERR! code ELiFECYCLE
+npm ERR! errno 1
+npm ERR! scrypt@6.0.3 install: `node-gyp rebuild`
+npm ERR! Exit status 1
+```
+
+请看[node-gyp安装问题](./qa.md)
+
+执行`npm start`，几秒钟后会自动打开一个网页 `http://localhost:3000/`，表明项目初始化并运行成功。
 
 **教练**：介绍一下一个网页从输入网址到显示内容都经历了什么？介绍一下什么是React和HTML有什么关系？
 
@@ -57,14 +73,21 @@ npm start
 [https://service-exvd0ctl-1258120565.ap-beijing.apigateway.myqcloud.com/release/addr](https://service-exvd0ctl-1258120565.ap-beijing.apigateway.myqcloud.com/release/addr)
 
 将生成的私钥和地址保存好，后面会用到。
+
+```
+不要将这里获取的私钥跟地址，当自己的钱包地址用来存币
+不要将这里获取的私钥跟地址，当自己的钱包地址用来存币
+不要将这里获取的私钥跟地址，当自己的钱包地址用来存币
+```
+
 特别注意，私钥 privateKey 是不能泄露给任何人的。上面这个账户就是临时用一下，所以无所谓了。
-于是， account 就到手了。
+于是，account 就到手了。
 
 **教练**：解释一下什么是加密货币钱包？冷钱包和热钱包有啥区别？地址和私钥是什么？为什么私钥很重要？如何保存私钥？
 
 参考：[https://learning.nervos.org/nerv-first/6-wallet](https://learning.nervos.org/nerv-first/6-wallet)
 
-### 充值 
+### 充值
 
 使用浏览器打开网页 [https://dapp.cryptape.com/faucet/](https://dapp.cryptape.com/faucet/) ，然后输入上一步生成的地址（address），点击 Get Testnet Token 按钮就可以获取免费的代币了。
 
@@ -98,7 +121,8 @@ module.exports = config
 
 这样配置文件就写好了。
 
-在文件夹src/下创建一个文件nervos.js，添加如下代码：
+在文件夹 `src/`下创建一个文件 `nervos.js`，添加如下代码：
+
 ```
 const {
   default: Nervos
@@ -113,9 +137,12 @@ nervos.base.accounts.wallet.add(account)
 
 module.exports = nervos
 ```
-创建 nervos.js 文件，初始化 nervos 对象。通过使用 config.chain ，指定了要跟哪条区块链进行交互。privateKeyToAccount 用私钥生成 account 。通过 wallet.add 接口把 account 添加到了 nervos 对象中并最终导出。
 
-在文件夹src/下创建一个文件simpleStore.js，添加如下代码：
+创建 nervos.js 文件，初始化 nervos 对象。通过使用 config.chain ，指定了要跟哪条区块链进行交互。privateKeyToAccount 用私钥生成 account。
+通过 wallet.add 接口把 account 添加到了 nervos 对象中并最终导出。
+
+在文件夹`src/`下创建一个文件`simpleStore.js`，添加如下代码：
+
 ```
 const nervos = require('./nervos')
 const {
@@ -139,8 +166,9 @@ module.exports = {
 
 参考：[https://learning.nervos.org/nerv-first/3-dev](https://learning.nervos.org/nerv-first/3-dev)
 [https://learning.nervos.org/nerv-first/4-sol](https://learning.nervos.org/nerv-first/4-sol)
+
 ```
-pragma solidity ^0.4.24;  // 版本要等于0.4.24才可以编译
+pragma solidity ^0.4.24; // 版本等于0.4.24才可以编译
 
 contract SimpleStore {
     mapping (address => mapping (uint256 => string)) private records;
@@ -190,7 +218,8 @@ contract SimpleStore {
 编译的输出可以通过点 details 按钮得到。
 这样合约就编译好了。
 
-在文件夹src下创建文件夹contracts，然后再文件夹中创建一个文件compiled.js，并添加如下代码：
+在文件夹`src/`下创建文件夹`contracts`，然后再文件夹中创建一个文件`compiled.js`，并添加如下代码：
+
 ```
 // deploy/compiled.js
 const bytecode = '稍后替换成真正的值'
@@ -200,7 +229,9 @@ module.exports = {
     bytecode
 }
 ```
-其中 bytecode 一项，就是 remix 最终编译结果中 bytecode 一项下的 **object 那个字段的值**，是一个长长的字符串，这点要注意，不要把全部内容都复制过来。如下图所示，就是 "6080..." 开始的这个双引号中的值。
+
+其中 bytecode 一项，就是 remix 最终编译结果中 bytecode 一项下的 **object 那个字段的值**，
+是一个长长的字符串，这点要注意，不要把全部内容都复制过来。如下图所示，就是 "6080..." 开始的这个双引号中的值。
 
 ![图片](https://uploader.shimo.im/f/h0FDy0TqDgAGu6nk.png!thumbnail)
 
@@ -212,7 +243,7 @@ module.exports = {
 
 我在 Github 上也上传了一个真实可用的版本供大家参考：[https://github.com/NervosBeijingCommunity/first-forever-simplified/blob/master/src/contracts/compiled.js](https://github.com/NervosBeijingCommunity/first-forever-simplified/blob/master/src/contracts/compiled.js) 。
 
-在文件夹src/contracts/下创建一个文件transaction.js，添加如下代码：
+在文件夹`src/contracts/`下创建一个文件`transaction.js`，添加如下代码：
 ```
 const nervos = require('../nervos')
 
@@ -229,9 +260,14 @@ const transaction = {
 
 module.exports = transaction
 ```
-创建 transaction.js 文件。from 一项指定了我们自己账户的地址。注意这里没有 to 也就是没有接收方。privateKey 一项用来指定私钥。特别说明一下，私钥是不能暴露给任何人的，这里为了演示方便，我们直接把私钥写到了代码中，但是实际的 DApp 一般都是开源软件，所以私钥是不能写到代码中的。AppChain 的解决方式是把私钥保存到 Neuron 钱包中，需要进行交易的时候，让代码跟 Neuron 交互来完成签名。当然，我们这里还是先不涉及 Neuron ，暂时把私钥写到了代码中。value 是交易数额，这里设置为0。后面的 quota，nonce ，chainId ，version ，validUntilBlock 都是跟交易安全相关的设置，可以到 AppChain 的核心，也就是 CITA 的官方文档上，找到各自的含义：[https://docs.nervos.org/cita/#/rpc_guide/rpc](https://docs.nervos.org/cita/#/rpc_guide/rpc) 。
 
-在文件夹src/contracts/下创建一个文件deploy.js，添加如下代码：
+创建 `transaction.js` 文件, from 一项指定了我们自己账户的地址。注意这里没有 to 也就是没有接收方。privateKey 一项用来指定私钥。**特别说明一下，私钥是不能暴露给任何人的，这里为了演示方便，我们直接把私钥写到了代码中，但是实际的 DApp 一般都是开源软件，所以私钥是不能写到代码中的。**
+AppChain 的解决方式是把私钥保存到 Neuron 钱包中，需要进行交易的时候，让代码跟 Neuron 交互来完成签名。
+当然，我们这里还是先不涉及 Neuron ，暂时把私钥写到了代码中。value 是交易数额，这里设置为0。
+后面的 quota，nonce ，chainId ，version ，validUntilBlock 都是跟交易安全相关的设置，可以到 AppChain 的核心，也就是 CITA 的官方文档上，找到各自的含义：[https://docs.nervos.org/cita/#/rpc_guide/rpc](https://docs.nervos.org/cita/#/rpc_guide/rpc)。
+
+在文件夹`src/contracts/`下创建一个文件`deploy.js`，添加如下代码：
+
 ```
 const nervos = require('../nervos')
 const {
@@ -273,7 +309,9 @@ nervos.base.getBlockNumber().then(current => {
     return nervos.base.getAbi(_contractAddress,'pending').then(console.log) // get abi from the chain
   }).catch(err => console.error(err))
 ```
-创建 deploy.js 。用来 deploy 字节码，然后就可以从 receipt 也就是回执中，得到合约地址并打印出来。通过 storeAbi 接口把合约 ABI 发送到链上。具体各个接口的描述可以参考 Nervos.js 的 npm 主页：[https://www.npmjs.com/package/@appchain/base](https://www.npmjs.com/package/@appchain/base)。
+
+创建 deploy.js，用来 deploy 字节码，然后就可以从 receipt 也就是回执中，得到合约地址并打印出来。
+通过 storeAbi 接口把合约 ABI 发送到链上。具体各个接口的描述可以参考 Nervos.js 的 npm 主页：[@appchain/base](https://www.npmjs.com/package/@appchain/base)。
 
 在命令行运行命令：
 ```
@@ -283,7 +321,8 @@ node src/contracts/deploy.js
 
 然后打开连接 [https://microscope.cryptape.com/](https://microscope.cryptape.com/) 搜索打印出的合约地址，发现出现的就是一个 Account ，下面有 contract 一项。点开，可以看到合约代码中对应的三个接口的相关界面。
 
-打开src/config.js文件，修改contractAddress的值为上面得到的合约地址：
+打开`src/config.js`文件，修改`contractAddress`的值为上面得到的合约地址：
+
 ```
 const config = {
   chain: 'https://node.cryptape.com',
@@ -298,7 +337,8 @@ module.exports = config
 
 ## 4 与合约交互
 
-清空src/App.js文件内容，添加如下代码：
+清空`src/App.js`文件内容，并添加如下代码：
+
 ```
 // src/App.js
 import React from 'react'
@@ -460,7 +500,8 @@ class App extends React.Component {
 export default App
 ```
 
-清空src/App.css文件内容，添加如下代码：
+清空`src/App.css`文件内容，并添加如下代码：
+
 ```
 // src/App.css
 .add__content--container {
