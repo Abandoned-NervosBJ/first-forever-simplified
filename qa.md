@@ -2,7 +2,7 @@
 
 ### node-gyp安装问题
 
-有一个 `npm install @appchain/base --save`操作，提示
+有一个 `npm install @cryptape/cita-sdk --save`操作，提示
 
 ```
 npm ERR! code ELiFECYCLE
@@ -23,7 +23,7 @@ node包 scrypt 有c、c++代码，需要本地编译，node的本地编译又依
 2. 安装node-gyp
 
 执行 `npm install node-gyp -g`
-然后在执行 `npm install @appchain/base --save`即可
+然后再执行 `npm install @cryptape/cita-sdk --save`即可
 
 在Mac系统中：
 略

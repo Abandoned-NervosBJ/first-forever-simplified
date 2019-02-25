@@ -56,7 +56,7 @@ create-react-app first-forever
 
 ```
 cd first-forever
-npm install @appchain/base --save
+npm install @cryptape/cita-sdk --save
 ```
 
 如果有错误提示， 如下：
@@ -140,7 +140,7 @@ module.exports = config
 ```
 const {
   default: Nervos
-} = require('@appchain/base')
+} = require('@cryptape/cita-sdk')
 
 const config = require('./config')
 
@@ -325,7 +325,7 @@ nervos.base.getBlockNumber().then(current => {
 ```
 
 创建 deploy.js，用来 deploy 字节码，然后就可以从 receipt 也就是回执中，得到合约地址并打印出来。
-通过 storeAbi 接口把合约 ABI 发送到链上。具体各个接口的描述可以参考 Nervos.js 的 npm 主页：[@appchain/base](https://www.npmjs.com/package/@appchain/base)。
+通过 storeAbi 接口把合约 ABI 发送到链上。具体各个接口的描述可以参考 Nervos.js 的 npm 主页：[@cryptape/cita-sdk](https://www.npmjs.com/package/@cryptape/cita-sdk)。
 
 在命令行运行命令：
 ```
