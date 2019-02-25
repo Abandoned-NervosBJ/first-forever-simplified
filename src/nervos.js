@@ -1,6 +1,6 @@
 const {
   default: Nervos
-} = require('@appchain/base')
+} = require('@cryptape/cita-sdk')
 
 const config = require('./config')
 
