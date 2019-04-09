@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;  // 版本要高于0.4.24才可以编译
+pragma solidity ^0.4.24;
 
 contract SimpleStore {
     mapping (address => mapping (uint256 => string)) private records;
