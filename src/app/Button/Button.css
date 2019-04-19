@@ -1,0 +1,42 @@
+.btn-component {
+  width: 150px;
+  cursor: pointer;
+  position: relative;
+  margin: auto;
+  font-size: 18px;
+}
+
+.btn-component-bg {
+  width: 100%;
+}
+
+.btn-component-text {
+  width: 100%;
+  line-height: 50px;
+  position: absolute;
+  top: 0;
+  color: #FFAA36;
+  text-shadow: #000 0 0 2px;
+}
+.vip-title {
+
+}
+
+.vip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vip-header .span-text{
+  color: #FFAA36;
+}
+
+.vip-addr {
+  flex-flow: row;
+}
+
+.vip-header-right {
+  display: flex;
+  align-items: center;
+}

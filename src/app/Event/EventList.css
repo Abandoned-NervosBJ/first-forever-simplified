@@ -1,0 +1,13 @@
+.event-list-container {
+  width: 190px;
+  height: 354px;
+  overflow-y: scroll;
+  position: absolute;
+  top: 150px;
+  left: 12px;
+  font-size: 16px;
+  color: white;
+  text-shadow: 2px 2px 2px #2F6B60;
+  text-align: left;
+  padding: 14px;
+}

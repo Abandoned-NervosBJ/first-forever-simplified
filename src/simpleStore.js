@@ -7,8 +7,9 @@ const {
 } = require('./config')
 
 const transaction = require('./contracts/transaction')
-const simpleStoreContract = new nervos.base.Contract(abi, contractAddress)
+const GameContract = new nervos.base.Contract(abi, contractAddress)
+
 module.exports = {
   transaction,
-  simpleStoreContract
+  GameContract
 }
