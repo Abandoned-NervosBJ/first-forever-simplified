@@ -13,9 +13,9 @@ contract Game {
 
   uint public rndTime = 5 minutes;
   uint constant public LAND_NUM = 9;
-  uint constant public currSeedPrice = 0.001 ether; // 当前种子价格
-  uint constant public initKettlePrice = 0.01 ether;
-  uint constant public initShovelPrice = 0.05 ether;
+  uint constant public currSeedPrice = 1 wei; // 当前种子价格
+  uint constant public initKettlePrice = 5 wei;
+  uint constant public initShovelPrice = 10 wei;
 
   uint adminCount;
   bool public activated = false;
