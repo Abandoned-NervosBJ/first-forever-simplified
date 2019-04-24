@@ -41,7 +41,7 @@ export default class App extends React.Component {
       contract,
     } = this.props;
     const { isAdmin } = this.state;
-    const withdrawFunc = isAdmin ? contract.withdrawComm : contract.withdraw;
+    const withdrawFunc = isAdmin ? contract.methods.withdrawComm : contract.methods.withdraw;
     try {
       await withdrawFunc({
         from: accounts[0],
@@ -54,7 +54,7 @@ export default class App extends React.Component {
 
   getPlayerEarnings = async() => {
     const { contract, accounts, convertBNWeiToEth } = this.props;
-    const response = await contract.getPlayerEarnings(accounts[0]);
+    const response = await contract.methods.getPlayerEarnings(accounts[0]);
     console.log('getPlayerEarnings response is: ', response);
     this.setState({
       ethBalance: parseFloat(convertBNWeiToEth(response[0])),

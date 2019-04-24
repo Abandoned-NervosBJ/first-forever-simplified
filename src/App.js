@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { transaction, GameContract } from './simpleStore'
 import nervos from './nervos'
-import truffleContract from 'truffle-contract';
+
+/////
 import TreeList from './app/TreeList/TreeList';
 import EventList from './app/Event/EventList';
 import Countdown from 'react-countdown-now';
@@ -11,6 +12,7 @@ import BuyShovel from './app/Modal/BuyShovel';
 import Ended from './app/Modal/Ended';
 import WithdrawModal from './app/Modal/Withdraw';
 import './App.css';
+/////
 
 const treeNum = 9;
 
@@ -42,100 +44,84 @@ class App extends Component {
 
   componentDidMount = async() => {
     try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
-      const self = this;
-      self.web3 = web3;
 
-      console.log('web3 version is: ', web3.version)
-
-      if (this.web3.utils) {
-        this.fromWei = this.web3.utils.fromWei
-        this.toWei = this.web3.utils.toWei
-      } else {
-        this.fromWei = this.web3.fromWei
-        this.toWei = this.web3.toWei
-      }
       // Use web3 to get the user's accounts. Take account into the old version of web3.
       // const accounts = await web3.eth.getAccounts();
-      const accounts = await web3.eth.getAccounts() || [this.web3.eth.defaultAccount];
+      // const accounts = await web3.eth.getAccounts() || [this.web3.eth.defaultAccount];
+
+      const self = this;
+      const accounts = nervos.base.accounts;
+
 
       // Get the contract instance.
-      const Contract = truffleContract(GameContract);
-      Contract.setProvider(web3.currentProvider);
-      const instance = await Contract.deployed();
+      const instance =  GameContract;
 
-      const onPayEvent = instance.onPay();
-      onPayEvent
-        .on('data', function (event) {
-          console.log('onPayEvent got data', event);
-          self.updateCurrRoundInfo();
-          self.setState({ eventList: self.state.eventList.concat([event]) });
-        })
-        .on('changed', function (event) {
-          // remove event from local database
-          console.log('onPayEvent changed', event)
-        })
-        .on('error', console.error);
+      // const onPayEvent = instance.onPay();
+      // onPayEvent
+      //   .on('data', function (event) {
+      //     console.log('onPayEvent got data', event);
+      //     self.updateCurrRoundInfo();
+      //     self.setState({ eventList: self.state.eventList.concat([event]) });
+      //   })
+      //   .on('changed', function (event) {
+      //     console.log('onPayEvent changed', event)
+      //   })
+      //   .on('error', console.error);
 
-      const onPotChangedEvent = instance.onPotChanged();
-      onPotChangedEvent
-        .on('data', function (event) {
-          console.log('onPotChangedEvent got data', event);
-        })
-        .on('changed', function (event) {
-          // remove event from local database
-          console.log('onPotChangedEvent changed', event)
-        })
-        .on('error', console.error);
+      // const onPotChangedEvent = instance.onPotChanged();
+      // onPotChangedEvent
+      //   .on('data', function (event) {
+      //     console.log('onPotChangedEvent got data', event);
+      //   })
+      //   .on('changed', function (event) {
+      //     console.log('onPotChangedEvent changed', event)
+      //   })
+      //   .on('error', console.error);
 
-      const onRndStartedEvent = instance.onRndStarted();
-      onRndStartedEvent
-        .on('data', function (event) {
-          self.updateCurrRoundInfo();
-          self.setState({
-            eventList: [],
-            openEndedModal: false,
-          });
-          console.log('onRndStartedEvent got data', event);
-        })
-        .on('changed', function (event) {
-          // remove event from local database
-          console.log('onRndStartedEvent changed', event)
-        })
-        .on('error', console.error);
+      // const onRndStartedEvent = instance.onRndStarted();
+      // onRndStartedEvent
+      //   .on('data', function (event) {
+      //     self.updateCurrRoundInfo();
+      //     self.setState({
+      //       eventList: [],
+      //       openEndedModal: false,
+      //     });
+      //     console.log('onRndStartedEvent got data', event);
+      //   })
+      //   .on('changed', function (event) {
+      //     console.log('onRndStartedEvent changed', event)
+      //   })
+      //   .on('error', console.error);
 
       // Withdraw Event
-      const onWithdrawEvent = instance.onWithdraw();
-      onWithdrawEvent
-        .on('data', function (event) {
-          self.updateCurrRoundInfo();
-          self.setState({ eventList: [] });
-          console.log('onWithdrawEvent got data', event);
-        })
-        .on('changed', function (event) {
-          // remove event from local database
-          console.log('onWithdrawEvent changed', event)
-        })
-        .on('error', console.error);
+      // const onWithdrawEvent = instance.onWithdraw();
+      // onWithdrawEvent
+      //   .on('data', function (event) {
+      //     self.updateCurrRoundInfo();
+      //     self.setState({ eventList: [] });
+      //     console.log('onWithdrawEvent got data', event);
+      //   })
+      //   .on('changed', function (event) {
+      //     console.log('onWithdrawEvent changed', event)
+      //   })
+      //   .on('error', console.error);
 
+        var web3 = nervos
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ web3, accounts, contract: instance }, this.updateCurrRoundInfo);
 
     } catch (error) {
-      // Catch any errors for any of the above operations.
-      console.log(
-        `Failed to load web3, accounts, or contract. Check console for details.`
-      );
+      console.log(`Failed to load web3, accounts, or contract. Check console for details.`);
       console.log(error);
     }
   };
 
   render() {
-    if (!this.state.web3 || !this.state.currRoundInfo) {
+    if (!this.state.currRoundInfo) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
+
     const {
       myExpectedReward,
       currRoundInfo,
@@ -217,7 +203,7 @@ class App extends Component {
   }
 
   // convert bignumber wei to ether, return string
-  convertBNWeiToEth = (bnWei) => this.fromWei(bnWei.toString())
+  convertBNWeiToEth = (bnWei) => nervos.utils.fromWei(bnWei.toString())
 
   updateSelectedTreeKettlePrice() {
     const { selectedTree, selectedTreeKettlePrice, currRoundInfo } = this.state;
@@ -230,7 +216,8 @@ class App extends Component {
 
   getPlayerEarnings = async() => {
     const { accounts, contract } = this.state;
-    const response = await contract.getPlayerEarnings(accounts[0]);
+
+    const response = await contract.methods.getPlayerEarnings(accounts.wallet[0].address).call();
     console.log('getPlayerEarnings response is: ', response);
     this.setState({
       playerEarnings: parseFloat(this.convertBNWeiToEth(response[0])) + parseFloat(this.convertBNWeiToEth(response[1])) + parseFloat(this.convertBNWeiToEth(response[2]))
@@ -380,10 +367,10 @@ class App extends Component {
     const value = this.toWei('0.001', 'ether');
 
     const from = this.myAccount;
-    await contract.buySeed(this.state.selectedTree, {
+    await contract.methods.buySeed(this.state.selectedTree, {
       from: accounts[0],
       value,
-      gas: 800000
+      gas: 800000 /////
     });
   };
 
@@ -397,10 +384,10 @@ class App extends Component {
     const value = this.toWei((selectedTreeKettlePrice * selectedKettleNum).toString(), 'ether');
     const from = this.myAccount;
     try {
-      await contract.buyKettle(selectedTree, {
-        from: accounts[0],
+      await contract.methods.buyKettle(selectedTree, {
+        from: accounts.wallet[0].address,
         value,
-        gas: 800000,
+        gas: 800000, /////
       });
     } catch (error) {
       console.log('buyKettle error: ', error);
@@ -420,10 +407,10 @@ class App extends Component {
     const from = this.myAccount;
 
     try {
-      await contract.buyShovel(selectedTree, {
-        from: accounts[0],
+      await contract.methods.buyShovel(selectedTree, {
+        from: accounts.wallet[0].address,
         value,
-        gas: 800000
+        gas: 800000 ///
       });
     } catch (error) {
       console.log('buyShovel error: ', error);
@@ -453,27 +440,30 @@ class App extends Component {
     this.getPlayerEarnings();
   };
 
-  getCurrRoundInfo = async () => {
+  getCurrRoundInfo = async () => { // 获取信息
+
     const { contract } = this.state;
     let response;
     try {
-      response = await contract.getCurrRoundInfo();
+      response = await contract.methods.getCurrRoundInfo().call(); /////
       console.log('getCurrRoundInfo response is: ', response);
     } catch (error) {
       console.log('getCurrRoundInfo error: ', error)
     }
     if (!response) return null;
+
     const result = {
-      currRoundNum: response[0].toNumber(),
+      currRoundNum: parseInt(response[0]),
       currPot: this.convertBNWeiToEth(response[1]),
-      endTime: response[2].toNumber() * 1000,
+      endTime: parseInt(response[2]) * 1000,
       currShovelPrice: this.convertBNWeiToEth(response[3]),
-      treeLevels: response[4].map(x => x.toNumber()),
-      kettleNums: response[5].map(x => x.toNumber()),
-      kettleTimes: response[6].map(x => x.toNumber()),
+      treeLevels: response[4].map(x => parseInt(x)),
+      kettleNums: response[5].map(x => parseInt(x)),
+      kettleTimes: response[6].map(x => parseInt(x)),
       kettlePrices: response[7].map(x => this.convertBNWeiToEth(x)),
       isRoundEnded: response[8],
     }
+
     this.setState({
       currRoundInfo: result,
     }, this.updateSelectedTreeKettlePrice);
@@ -483,9 +473,10 @@ class App extends Component {
 
   getPlayerExpectedReward = async() => {
     const { contract, accounts } = this.state;
-    const response = await contract.getPlayerExpectedReward(accounts[0]);
-    console.log('getPlayerExpectedReward response is: ', response);
+    const response = await contract.methods.getPlayerExpectedReward(accounts.wallet[0].address).call(); /////
+
     if (!response) return 0;
+
     this.setState({
       myExpectedReward: this.convertBNWeiToEth(response)
     });
@@ -522,7 +513,7 @@ class App extends Component {
     const { contract, accounts } = this.state;
     const from = this.myAccount;
     try {
-      contract.startNextRound({ from: accounts[0] });
+      contract.methods.startNextRound({ from: accounts.wallet[0].address }); /////
     } catch (error) {
       console.log('startNextRound error: ', error);
     }

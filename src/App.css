@@ -104,7 +104,7 @@
 }
 
 .selected {
-  background: url(images/bg-tree-selected.png) no-repeat;
+  background: url("images/bg-tree-selected.png") no-repeat;
   background-size: contain;
 }
 
