@@ -72,63 +72,60 @@ class App extends Component {
       // Get the contract instance.
       const instance =  GameContract;
 
-      // const onPayEvent = instance.onPay();
-      // onPayEvent
-      //   .on('data', function (event) {
-      //     console.log('onPayEvent got data', event);
-      //     self.updateCurrRoundInfo();
-      //     self.setState({ eventList: self.state.eventList.concat([event]) });
-      //   })
-      //   .on('changed', function (event) {
-      //     console.log('onPayEvent changed', event)
-      //   })
-      //   .on('error', console.error);
+      const onPayEvent = instance.events.onPay();
+      onPayEvent
+        .on('data', function (event) {
+          console.log('onPayEvent got data', event);
+          self.updateCurrRoundInfo();
+          self.setState({ eventList: self.state.eventList.concat([event]) });
+        })
+        .on('changed', function (event) {
+          console.log('onPayEvent changed', event)
+        })
+        .on('error', console.error);
 
-      // const onPotChangedEvent = instance.onPotChanged();
-      // onPotChangedEvent
-      //   .on('data', function (event) {
-      //     console.log('onPotChangedEvent got data', event);
-      //   })
-      //   .on('changed', function (event) {
-      //     console.log('onPotChangedEvent changed', event)
-      //   })
-      //   .on('error', console.error);
+      const onPotChangedEvent = instance.events.onPotChanged();
+      onPotChangedEvent
+        .on('data', function (event) {
+          console.log('onPotChangedEvent got data', event);
+        })
+        .on('changed', function (event) {
+          console.log('onPotChangedEvent changed', event)
+        })
+        .on('error', console.error);
 
-      // const onRndStartedEvent = instance.onRndStarted();
-      // onRndStartedEvent
-      //   .on('data', function (event) {
-      //     self.updateCurrRoundInfo();
-      //     self.setState({
-      //       eventList: [],
-      //       openEndedModal: false,
-      //     });
-      //     console.log('onRndStartedEvent got data', event);
-      //   })
-      //   .on('changed', function (event) {
-      //     console.log('onRndStartedEvent changed', event)
-      //   })
-      //   .on('error', console.error);
+      const onRndStartedEvent = instance.events.onRndStarted();
+      onRndStartedEvent
+        .on('data', function (event) {
+          self.updateCurrRoundInfo();
+          self.setState({
+            eventList: [],
+            openEndedModal: false,
+          });
+          console.log('onRndStartedEvent got data', event);
+        })
+        .on('changed', function (event) {
+          console.log('onRndStartedEvent changed', event)
+        })
+        .on('error', console.error);
 
       // Withdraw Event
-      // const onWithdrawEvent = instance.onWithdraw();
-      // onWithdrawEvent
-      //   .on('data', function (event) {
-      //     self.updateCurrRoundInfo();
-      //     self.setState({ eventList: [] });
-      //     console.log('onWithdrawEvent got data', event);
-      //   })
-      //   .on('changed', function (event) {
-      //     console.log('onWithdrawEvent changed', event)
-      //   })
-      //   .on('error', console.error);
+      const onWithdrawEvent = instance.events.onWithdraw();
+      onWithdrawEvent
+        .on('data', function (event) {
+          self.updateCurrRoundInfo();
+          self.setState({ eventList: [] });
+          console.log('onWithdrawEvent got data', event);
+        })
+        .on('changed', function (event) {
+          console.log('onWithdrawEvent changed', event)
+        })
+        .on('error', console.error);
 
         var web3 = nervos
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
       this.setState({ web3, accounts, contract: instance }, this.updateCurrRoundInfo);
 
     } catch (error) {
-      console.log(`Failed to load web3, accounts, or contract. Check console for details.`);
       console.log(error);
     }
   };
@@ -393,15 +390,10 @@ class App extends Component {
       selectedTree,
       selectedTreeKettlePrice,
     } = this.state;
-    const value = this.toWei((selectedTreeKettlePrice * selectedKettleNum).toString(), 'ether');
-    const from = accounts.wallet[0].address;
 
     try {
-      await contract.methods.buyKettle(selectedTree, {
-        from: from,
-        value,
-        gas: 800000, /////
-      });
+      let utilNum = await nervos.base.getBlockNumber() + 88;
+      await contract.methods.buyKettle(selectedTree).send(createTx(1,1,utilNum))
     } catch (error) {
       console.log('buyKettle error: ', error);
     }
