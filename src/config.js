@@ -1,8 +1,8 @@
 const config = {
   chain: 'https://node.cryptape.com',
-  contractAddress: '0x6659fD46360cD2fCC599FD42494eBAdC95561ea6',
-  fromAddress: '0x529Aa60662689FA211AB64C723Df65122684B99B',
-  privateKey: '0xa8c0c056713dde623cc96b3e3b5850c7bba43931728a8aea04104aa90eb8c3fa',
+  contractAddress: '0xa4BB19b6D75d2405EDCcD9a277D1301Fb2fdFD78',
+  fromAddress: '0x1E75F044d632Ba1F90e9feD561c1e981a7b6E08b',
+  privateKey: '0x3a5e30adacf0ccae5e7058d7da0661c00cce3a840d6a3e4ced5ee9320a13aa0f',
 }
 
 module.exports = config

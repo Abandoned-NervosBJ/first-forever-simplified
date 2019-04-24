@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { transaction, GameContract } from './simpleStore'
+import {GameContract } from './simpleStore'
 import nervos from './nervos'
 
 /////
@@ -14,7 +14,23 @@ import WithdrawModal from './app/Modal/Withdraw';
 import './App.css';
 /////
 
+
 const treeNum = 9;
+
+const createTx = (quota, value, untilNum) => {
+  let tx = {
+    from: nervos.base.accounts.wallet[0].address,
+    privateKey: nervos.base.accounts.wallet[0].privateKey,
+    nonce: 999999,
+    quota: quota*1000000,
+    chainId: 1,
+    version: 1,
+    value: value,
+    validUntilBlock: untilNum,
+  };
+
+  return tx;
+}
 
 const toFloatMoney = (strNum) => {
   const float = parseFloat(strNum);
@@ -364,14 +380,10 @@ class App extends Component {
   // use seed to create a tree
   buySeed = async() => {
     const { accounts, contract } = this.state;
-    const value = this.toWei('0.001', 'ether');
+    const value = nervos.utils.toWei('0.001', 'ether');
 
-    const from = this.myAccount;
-    await contract.methods.buySeed(this.state.selectedTree, {
-      from: accounts[0],
-      value,
-      gas: 800000 /////
-    });
+    let utilNum = await nervos.base.getBlockNumber() + 88;
+    await contract.methods.buySeed(this.state.selectedTree).send(createTx(1, 1, utilNum));
   };
 
   buyKettle = async (selectedKettleNum) => {
@@ -382,10 +394,11 @@ class App extends Component {
       selectedTreeKettlePrice,
     } = this.state;
     const value = this.toWei((selectedTreeKettlePrice * selectedKettleNum).toString(), 'ether');
-    const from = this.myAccount;
+    const from = accounts.wallet[0].address;
+
     try {
       await contract.methods.buyKettle(selectedTree, {
-        from: accounts.wallet[0].address,
+        from: from,
         value,
         gas: 800000, /////
       });
@@ -445,7 +458,7 @@ class App extends Component {
     const { contract } = this.state;
     let response;
     try {
-      response = await contract.methods.getCurrRoundInfo().call(); /////
+      response = await contract.methods.getCurrRoundInfo().call();
       console.log('getCurrRoundInfo response is: ', response);
     } catch (error) {
       console.log('getCurrRoundInfo error: ', error)
