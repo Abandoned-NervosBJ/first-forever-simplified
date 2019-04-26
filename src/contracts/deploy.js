@@ -35,5 +35,10 @@ nervos.base.getBlockNumber().then(current => {
     return nervos.base.storeAbi(contractAddress, abi, transaction) // store abi on the chain
   }).then(res => {
     if (res.errorMessage) throw new Error(res.errorMessage)
-    return nervos.base.getAbi(_contractAddress, 'pending').then(console.log) // get abi from the chain
+    return nervos.base.getAbi(_contractAddress, 'pending').then(
+      res => {
+      console.log(res)
+      console.log(`\n\n contractAddress is: ${_contractAddress}`)
+      }
+    ) // get abi from the chain
   }).catch(err => console.error(err))

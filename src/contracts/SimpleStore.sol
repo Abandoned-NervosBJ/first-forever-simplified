@@ -1,17 +1,18 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.25;
 
 import "./lib/SafeMath.sol";
 
 contract Game {
   using SafeMath for *;
 
-  address public owner = 0x737CBb8906Af842cC6270D64c315167779268dF6;
-  //0x37cffcb24edc31388d8cc1159e01617a9284df3954a9a6080001bb42060076cb
+  address public owner = 0x9156A7CdAB767fFE161Ed21a0cb0b688b545b01F;
 
   uint public commEthBal; // community eth balance
   uint public currRID; // 当前是第几局
 
-  uint public rndTime = 5 minutes;
+  // https://docs.citahub.com/zh-CN/cita/configuration/service-config
+  // eth_compatibility: CITA默认与以太坊在块的时间戳精度上不兼容,CITA为毫秒,以太坊为秒
+  uint public rndTime = 5*60*1000; // 5 minutes
   uint constant public LAND_NUM = 9;
   uint constant public currSeedPrice = 1 wei; // 当前种子价格
   uint constant public initKettlePrice = 5 wei;
@@ -28,8 +29,8 @@ contract Game {
   mapping (address => Admin) public admins;
 
   address[] public adminAddr = [
-    0x737CBb8906Af842cC6270D64c315167779268dF6,
-    0x737CBb8906Af842cC6270D64c315167779268dF6
+    0x9156A7CdAB767fFE161Ed21a0cb0b688b545b01F,
+    0x9156A7CdAB767fFE161Ed21a0cb0b688b545b01F
   ];
 
   //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -319,17 +320,20 @@ contract Game {
     _currTree.kettleTime = _currTree.kettleTime.add(1);
     // 更新树的浇水时间
     _currTree.kettleClock = block.timestamp;
+
     // 增加这个树的水壶价格
-    _currTree.kettlePrice = _currTree.kettlePrice.add(0.01 ether);
+    _currTree.kettlePrice = _currTree.kettlePrice.add(50);
 
     // 更新本树的级别 level
     _currTree.level = getTreeLevelByKettleNum(_currTree.kettleNum);
+
     // 更新全局状态: tree level, tree ids
     mapRIDToTreeLevels[currRID][landInx] = _currTree.level;
 
     // 更新最高树所在的land id
     uint _highestLID = mapRIDToRnd[currRID].currHighestLID;
     uint _highestTID = mapRIDToTreeIDs[currRID][_highestLID];
+
     if (_currTree.kettleNum > mapRndTreeData[currRID][_highestLID][_highestTID].kettleNum) {
       mapRIDToRnd[currRID].currHighestLID = landInx;
       mapRIDToRnd[currRID].isHighestLandExisted = true;
@@ -370,8 +374,7 @@ contract Game {
     Tree storage _currTree = mapRndTreeData[currRID][landInx][_currTID];
     uint currShovelPrice = mapRIDToRnd[currRID].currShovelPrice;
 
-    require(_currTree.level > 0, "tree level must be bigger than 0");
-    // 用户付出的钱必须是当前铲子价格
+    require(_currTree.level > 0, "tree level > 0");
     require(msg.value == currShovelPrice, "the eth you pay is incorrect");
 
     uint _ethUsed = currShovelPrice;
@@ -396,8 +399,8 @@ contract Game {
       mapRIDToRnd[currRID].lastWinner = msg.sender;
     }
 
-    // 增加铲子价格, 铲子每被任何玩家买一次, 价格都增加0.1eth
-    mapRIDToRnd[currRID].currShovelPrice = currShovelPrice.add(0.1 ether);
+    // 增加铲子价格, 铲子每被任何玩家买一次, 价格都增加500wei
+    mapRIDToRnd[currRID].currShovelPrice = currShovelPrice.add(500);
 
     //****************
     // update tree info
