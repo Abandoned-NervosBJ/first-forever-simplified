@@ -32,6 +32,21 @@ const createTx = (quota, value, untilNum) => {
   return tx;
 }
 
+const handleTx = async(tx, errFunc=null) => {
+  if (tx.hash) {
+      let receipt = await nervos.listeners.listenToTransactionReceipt(tx.hash);
+      if (!receipt.errorMessage) {
+      } else {
+        console.err(receipt.errorMessage)
+        return errFunc
+      }
+    } else {
+      console.err('No Transaction Hash Received')
+      return errFunc
+    }
+
+}
+
 const toFloatMoney = (strNum) => {
   const float = parseFloat(strNum);
   if (float === 0) return 0;
@@ -60,7 +75,6 @@ class App extends Component {
 
   componentDidMount = async() => {
     try {
-
       // Use web3 to get the user's accounts. Take account into the old version of web3.
       // const accounts = await web3.eth.getAccounts();
       // const accounts = await web3.eth.getAccounts() || [this.web3.eth.defaultAccount];
@@ -68,9 +82,8 @@ class App extends Component {
       const self = this;
       const accounts = nervos.base.accounts;
 
-
       // Get the contract instance.
-      const instance =  GameContract;
+      const instance = GameContract;
 
       const onPayEvent = instance.events.onPay();
       onPayEvent
@@ -380,7 +393,10 @@ class App extends Component {
     const value = nervos.utils.toWei('0.001', 'ether');
 
     let utilNum = await nervos.base.getBlockNumber() + 88;
-    await contract.methods.buySeed(this.state.selectedTree).send(createTx(1, 1, utilNum));
+    let res = await contract.methods.buySeed(this.state.selectedTree).send(createTx(1, 1, utilNum));
+
+    handleTx(res, null)
+
   };
 
   buyKettle = async (selectedKettleNum) => {
@@ -460,7 +476,7 @@ class App extends Component {
     const result = {
       currRoundNum: parseInt(response[0]),
       currPot: this.convertBNWeiToEth(response[1]),
-      endTime: parseInt(response[2]) * 1000,
+      endTime: parseInt(response[2].substr(0, 10))* 1000,
       currShovelPrice: this.convertBNWeiToEth(response[3]),
       treeLevels: response[4].map(x => parseInt(x)),
       kettleNums: response[5].map(x => parseInt(x)),

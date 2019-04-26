@@ -2,6 +2,7 @@ const nervos = require('./nervos')
 const {
   abi
 } = require('./contracts/compiled.js')
+
 const {
   contractAddress
 } = require('./config')
