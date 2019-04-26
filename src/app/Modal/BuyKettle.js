@@ -23,6 +23,7 @@ export default class App extends React.Component {
       price,
       kettleTime
     } = this.props;
+
     const { kettleNum } = this.state;
     const input = (
       <div className={'kettle-input-container'}>
@@ -34,10 +35,10 @@ export default class App extends React.Component {
     const body =(
       <div>
         <div className={'mb10'}>对{treeID + 1}号树进行第{kettleTime + 1}次浇水</div>
-        <div className={'mb10'}>水壶价格：{price}eth/次</div>
+        <div className={'mb10'}>水壶价格：{price}wei/次</div>
         <div className={'mb10'}>输入数量</div>
         {input}
-        <div  className={'mt10'}>(浇{kettleNum}次水，消耗{kettleNum * price}eth)</div>
+        <div  className={'mt10'}>(浇{kettleNum}次水，消耗{kettleNum * price}wei)</div>
       </div>
     )
     return <ModalContainer {...this.props} onClick={this.onClick} body={body} />;

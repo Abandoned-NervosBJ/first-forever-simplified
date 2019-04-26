@@ -32,21 +32,6 @@ const createTx = (quota, value, untilNum) => {
   return tx;
 }
 
-const handleTx = async(tx, errFunc=null) => {
-  if (tx.hash) {
-      let receipt = await nervos.listeners.listenToTransactionReceipt(tx.hash);
-      if (!receipt.errorMessage) {
-      } else {
-        console.err(receipt.errorMessage)
-        return errFunc
-      }
-    } else {
-      console.err('No Transaction Hash Received')
-      return errFunc
-    }
-
-}
-
 const toFloatMoney = (strNum) => {
   const float = parseFloat(strNum);
   if (float === 0) return 0;
@@ -58,7 +43,7 @@ class App extends Component {
   state = {
     treeNum: 0,
     selectedTree: 0,
-    selectedTreeKettlePrice: 0.01,
+    selectedTreeKettlePrice: 5,
     myExpectedReward: 0,
     web3: null,
     accounts: null,
@@ -90,7 +75,7 @@ class App extends Component {
         .on('data', function (event) {
           console.log('onPayEvent got data', event);
           self.updateCurrRoundInfo();
-          self.setState({ eventList: self.state.eventList.concat([event]) });
+          // self.setState({ eventList: self.state.eventList.concat('') });
         })
         .on('changed', function (event) {
           console.log('onPayEvent changed', event)
@@ -209,7 +194,7 @@ class App extends Component {
         <img alt={'bg'} src={'./images/bg.png'} className={'bg'} />
         <div className={'header-info round-num'}>{currRoundNum}</div>
         <div className={'header-info reward yellow-gradient'}>{toFloatMoney(currPot * 0.9)}</div>
-        <div className={'header-info last-reward'}>{toFloatMoney(lastOneReward)}eth</div>
+        <div className={'header-info last-reward'}>{toFloatMoney(lastOneReward)}wei</div>
         {countDown}
         {eventList}
         {withdrawBtn}
@@ -231,9 +216,27 @@ class App extends Component {
   // convert bignumber wei to ether, return string
   convertBNWeiToEth = (bnWei) => nervos.utils.fromWei(bnWei.toString())
 
+  handleTx = async(tx) => {
+    if (tx.hash) {
+        let receipt = await nervos.listeners.listenToTransactionReceipt(tx.hash);
+        if (!receipt.errorMessage) {
+          return true;
+        } else {
+          console.error(receipt.errorMessage)
+          return false;
+        }
+      } else {
+        console.error('No Transaction Hash Received')
+          return false;
+      }
+
+  }
+
   updateSelectedTreeKettlePrice() {
     const { selectedTree, selectedTreeKettlePrice, currRoundInfo } = this.state;
+
     if (!currRoundInfo) return;
+
     const newPrice = currRoundInfo.kettlePrices[selectedTree];
     if (newPrice !== selectedTreeKettlePrice) {
       this.setState({ selectedTreeKettlePrice: newPrice })
@@ -292,11 +295,11 @@ class App extends Component {
     const btnGroup = (
       <div className={'btn-group'}>
         <img {...seedProps} />
-        <div className={'price seed-price'}>{seedPrice}eth</div>
+        <div className={'price seed-price'}>{seedPrice}wei</div>
         <img {...kettleProps} />
-        <div className={'price kettle-price'}>{kettlePrice}eth</div>
+        <div className={'price kettle-price'}>{kettlePrice}wei</div>
         <img {...shovelProps} />
-        <div className={'price shovel-price'}>{currShovelPrice}eth</div>
+        <div className={'price shovel-price'}>{currShovelPrice}wei</div>
       </div>
     );
     return btnGroup;
@@ -321,7 +324,7 @@ class App extends Component {
     const seedProps = {
       open: openSeedModal,
       onClose: (e) => this.onCloseModal('openSeedModal'),
-      price: 0.001,
+      price: 1,
       onClick: this.buySeed,
       treeID: selectedTree,
     };
@@ -345,6 +348,7 @@ class App extends Component {
       treeID: selectedTree,
       kettleTime: kettleTimes[selectedTree],
     };
+
     return openKettleModal ? <BuyKettle {...kettleProps} /> : '';
   }
 
@@ -390,13 +394,22 @@ class App extends Component {
   // use seed to create a tree
   buySeed = async() => {
     const { accounts, contract } = this.state;
-    const value = nervos.utils.toWei('0.001', 'ether');
+    const value = 1;
 
     let utilNum = await nervos.base.getBlockNumber() + 88;
-    let res = await contract.methods.buySeed(this.state.selectedTree).send(createTx(1, 1, utilNum));
+    let tx = await contract.methods.buySeed(this.state.selectedTree).send(createTx(1, value, utilNum));
 
-    handleTx(res, null)
-
+    if (tx.hash) {
+        let receipt = await nervos.listeners.listenToTransactionReceipt(tx.hash);
+        if (!receipt.errorMessage) {
+          //
+        this.updateCurrRoundInfo();
+        } else {
+          console.error(receipt.errorMessage)
+        }
+      } else {
+        console.error('No Transaction Hash Received')
+      }
   };
 
   buyKettle = async (selectedKettleNum) => {
@@ -409,9 +422,11 @@ class App extends Component {
 
     try {
       let utilNum = await nervos.base.getBlockNumber() + 88;
-      await contract.methods.buyKettle(selectedTree).send(createTx(1,1,utilNum))
+      const value =  selectedTreeKettlePrice * selectedKettleNum;
+      let tx = await contract.methods.buyKettle(selectedTree).send(createTx(1,value,utilNum));
+
     } catch (error) {
-      console.log('buyKettle error: ', error);
+      console.error('buyKettle error: ', error);
     }
   };
 
@@ -424,17 +439,18 @@ class App extends Component {
       currRoundInfo,
     } = this.state;
 
-    const value = this.toWei(currRoundInfo.currShovelPrice.toString(), 'ether');
+    const value = parseInt(currRoundInfo.currShovelPrice);
     const from = this.myAccount;
 
+    alert("buyShovel value "+   value)
+
     try {
-      await contract.methods.buyShovel(selectedTree, {
-        from: accounts.wallet[0].address,
-        value,
-        gas: 800000 ///
-      });
+        let utilNum = await nervos.base.getBlockNumber() + 88;
+        let tx = await contract.methods.buyShovel(selectedTree).send(createTx(1, value, utilNum));
+        alert("tx hash ", tx.hash)
+
     } catch (error) {
-      console.log('buyShovel error: ', error);
+      console.error('buyShovel error: ', error);
     }
 
   }
@@ -449,6 +465,7 @@ class App extends Component {
 
   onClick(id, level, kettlePrice) {
     console.log('app container: id, level, kettlePrice: ', id, level, kettlePrice)
+
     this.setState({
       selectedTree: id,
       selectedTreeKettlePrice: kettlePrice
@@ -467,21 +484,23 @@ class App extends Component {
     let response;
     try {
       response = await contract.methods.getCurrRoundInfo().call();
+
       console.log('getCurrRoundInfo response is: ', response);
     } catch (error) {
       console.log('getCurrRoundInfo error: ', error)
     }
+
     if (!response) return null;
 
     const result = {
       currRoundNum: parseInt(response[0]),
-      currPot: this.convertBNWeiToEth(response[1]),
-      endTime: parseInt(response[2].substr(0, 10))* 1000,
-      currShovelPrice: this.convertBNWeiToEth(response[3]),
+      currPot:  response[1],
+      endTime: parseInt(response[2]),
+      currShovelPrice: response[3],
       treeLevels: response[4].map(x => parseInt(x)),
       kettleNums: response[5].map(x => parseInt(x)),
       kettleTimes: response[6].map(x => parseInt(x)),
-      kettlePrices: response[7].map(x => this.convertBNWeiToEth(x)),
+      kettlePrices: response[7],
       isRoundEnded: response[8],
     }
 
@@ -504,15 +523,15 @@ class App extends Component {
   }
 
   getLastOneReward() {
-    return this.state.currRoundInfo &&this.state.currRoundInfo.currPot * 0.1;
+    return this.state.currRoundInfo && this.state.currRoundInfo.currPot * 0.1;
   }
 
   getSeedPrice() {
-    return 0.001;
+    return 1;
   }
 
   getKettlePrice() {
-    return this.state.selectedTreeKettlePrice || 0.01;
+    return this.state.selectedTreeKettlePrice || 5;
   }
 
   getShovelPrice() {
