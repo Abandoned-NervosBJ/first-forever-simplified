@@ -138,6 +138,7 @@ class App extends Component {
       currRoundInfo,
       selectedTree
     } = this.state;
+
     const {
       currRoundNum,
       endTime,
@@ -177,11 +178,13 @@ class App extends Component {
       selectedTree,
       onClick: this.onClick.bind(this),
     }
+
     const countDown = (
       <div className={'header-info countdown'}>
         <Countdown daysInHours date={endTime} onComplete={this.openEndedModal} />
       </div>
     );
+
     const treeList = <TreeList {...treeProps} />;
     const buySeed = this.renderBuySeedModal();
     const buyKettle = this.renderBuyKettleModal();
@@ -201,7 +204,7 @@ class App extends Component {
         {btnGroup}
         {treeList}
         <div className={'my-expected-reward yellow-gradient'}>
-          {toFloatMoney(myExpectedReward)}
+          { toFloatMoney(myExpectedReward) }
         </div>
         {buySeed}
         {buyKettle}
@@ -214,7 +217,9 @@ class App extends Component {
   }
 
   // convert bignumber wei to ether, return string
-  convertBNWeiToEth = (bnWei) => nervos.utils.fromWei(bnWei.toString())
+  convertBNWeiToEth = (bnWei) => {
+    return nervos.utils.fromWei(bnWei.toString())
+  }
 
   handleTx = async(tx) => {
     if (tx.hash) {
@@ -248,6 +253,7 @@ class App extends Component {
 
     const response = await contract.methods.getPlayerEarnings(accounts.wallet[0].address).call();
     console.log('getPlayerEarnings response is: ', response);
+
     this.setState({
       playerEarnings: parseFloat(this.convertBNWeiToEth(response[0])) + parseFloat(this.convertBNWeiToEth(response[1])) + parseFloat(this.convertBNWeiToEth(response[2]))
     });
@@ -513,12 +519,12 @@ class App extends Component {
 
   getPlayerExpectedReward = async() => {
     const { contract, accounts } = this.state;
-    const response = await contract.methods.getPlayerExpectedReward(accounts.wallet[0].address).call(); /////
+    const reward = await contract.methods.getPlayerExpectedReward(accounts.wallet[0].address).call();
 
-    if (!response) return 0;
+    // if (!reward) return 0;
 
     this.setState({
-      myExpectedReward: this.convertBNWeiToEth(response)
+      myExpectedReward: this.convertBNWeiToEth(reward),
     });
   }
 

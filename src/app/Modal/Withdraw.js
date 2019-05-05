@@ -54,8 +54,9 @@ export default class App extends React.Component {
 
   getPlayerEarnings = async() => {
     const { contract, accounts, convertBNWeiToEth } = this.props;
-    const response = await contract.methods.getPlayerEarnings(accounts[0]);
+    const response = await contract.methods.getPlayerEarnings(accounts.wallet[0].address).call();
     console.log('getPlayerEarnings response is: ', response);
+
     this.setState({
       ethBalance: parseFloat(convertBNWeiToEth(response[0])),
       vipBalance: parseFloat(convertBNWeiToEth(response[1])),
