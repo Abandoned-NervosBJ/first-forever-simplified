@@ -66,61 +66,9 @@ class App extends Component {
 
       const self = this;
       const accounts = nervos.base.accounts;
-
       // Get the contract instance.
       const instance = GameContract;
-
-      const onPayEvent = instance.events.onPay();
-      onPayEvent
-        .on('data', function (event) {
-          console.log('onPayEvent got data', event);
-          self.updateCurrRoundInfo();
-          // self.setState({ eventList: self.state.eventList.concat('') });
-        })
-        .on('changed', function (event) {
-          console.log('onPayEvent changed', event)
-        })
-        .on('error', console.error);
-
-      const onPotChangedEvent = instance.events.onPotChanged();
-      onPotChangedEvent
-        .on('data', function (event) {
-          console.log('onPotChangedEvent got data', event);
-        })
-        .on('changed', function (event) {
-          console.log('onPotChangedEvent changed', event)
-        })
-        .on('error', console.error);
-
-      const onRndStartedEvent = instance.events.onRndStarted();
-      onRndStartedEvent
-        .on('data', function (event) {
-          self.updateCurrRoundInfo();
-          self.setState({
-            eventList: [],
-            openEndedModal: false,
-          });
-          console.log('onRndStartedEvent got data', event);
-        })
-        .on('changed', function (event) {
-          console.log('onRndStartedEvent changed', event)
-        })
-        .on('error', console.error);
-
-      // Withdraw Event
-      const onWithdrawEvent = instance.events.onWithdraw();
-      onWithdrawEvent
-        .on('data', function (event) {
-          self.updateCurrRoundInfo();
-          self.setState({ eventList: [] });
-          console.log('onWithdrawEvent got data', event);
-        })
-        .on('changed', function (event) {
-          console.log('onWithdrawEvent changed', event)
-        })
-        .on('error', console.error);
-
-        var web3 = nervos
+      const web3 = nervos;
       this.setState({ web3, accounts, contract: instance }, this.updateCurrRoundInfo);
 
     } catch (error) {
@@ -408,8 +356,8 @@ class App extends Component {
     if (tx.hash) {
         let receipt = await nervos.listeners.listenToTransactionReceipt(tx.hash);
         if (!receipt.errorMessage) {
-          //
-        this.updateCurrRoundInfo();
+          alert("购买种子成功");
+          this.updateCurrRoundInfo();
         } else {
           console.error(receipt.errorMessage)
         }
@@ -431,6 +379,17 @@ class App extends Component {
       const value =  selectedTreeKettlePrice * selectedKettleNum;
       let tx = await contract.methods.buyKettle(selectedTree).send(createTx(1,value,utilNum));
 
+      if (tx.hash) {
+        let receipt = await nervos.listeners.listenToTransactionReceipt(tx.hash);
+        if (!receipt.errorMessage) {
+          alert("浇水成功");
+          this.updateCurrRoundInfo();
+        } else {
+          console.error(receipt.errorMessage)
+        }
+      } else {
+        console.error('No Transaction Hash Received')
+      }
     } catch (error) {
       console.error('buyKettle error: ', error);
     }
@@ -446,14 +405,22 @@ class App extends Component {
     } = this.state;
 
     const value = parseInt(currRoundInfo.currShovelPrice);
-    const from = this.myAccount;
-
-    alert("buyShovel value "+   value)
 
     try {
         let utilNum = await nervos.base.getBlockNumber() + 88;
         let tx = await contract.methods.buyShovel(selectedTree).send(createTx(1, value, utilNum));
-        alert("tx hash ", tx.hash)
+
+      if (tx.hash) {
+        let receipt = await nervos.listeners.listenToTransactionReceipt(tx.hash);
+        if (!receipt.errorMessage) {
+          alert("铲子成功");
+          this.updateCurrRoundInfo();
+        } else {
+          console.error(receipt.errorMessage)
+        }
+      } else {
+        console.error('No Transaction Hash Received')
+      }
 
     } catch (error) {
       console.error('buyShovel error: ', error);
@@ -479,6 +446,7 @@ class App extends Component {
   }
 
   updateCurrRoundInfo() {
+    alert(/updateCurrRoundInfo/)
     this.getCurrRoundInfo();
     this.getPlayerExpectedReward();
     this.getPlayerEarnings();
@@ -490,7 +458,6 @@ class App extends Component {
     let response;
     try {
       response = await contract.methods.getCurrRoundInfo().call();
-
       console.log('getCurrRoundInfo response is: ', response);
     } catch (error) {
       console.log('getCurrRoundInfo error: ', error)
