@@ -456,7 +456,7 @@ class App extends Component {
   }
 
   updateCurrRoundInfo() {
-    console.log(/updateCurrRoundInfo/)
+    alert(/更新中/)
     this.getCurrRoundInfo();
     this.getPlayerExpectedReward();
     this.getPlayerEarnings();
