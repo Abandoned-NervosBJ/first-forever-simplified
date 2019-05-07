@@ -11,6 +11,11 @@ export default class App extends React.Component {
         <div className={'mb10'}>(用铲子将{treeID + 1}号田植物铲除，消耗{price}wei)</div>
       </div>
     )
-    return <ModalContainer {...this.props} body={body} />;
+
+    return <ModalContainer {...this.props} onClick={this.onAction()} body={body} />;
+  }
+
+  onAction = () => {
+    this.props.onClick(this.props.treeID);
   }
 }

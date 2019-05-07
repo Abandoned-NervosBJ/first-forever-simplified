@@ -275,6 +275,7 @@ class App extends Component {
       openSeedModal,
       selectedTree,
     } = this.state;
+
     const seedProps = {
       open: openSeedModal,
       onClose: (e) => this.onCloseModal('openSeedModal'),
@@ -346,7 +347,7 @@ class App extends Component {
   }
 
   // use seed to create a tree
-  buySeed = async() => {
+  buySeed = async(treeID) => {
     const { accounts, contract } = this.state;
     const value = 1;
 
@@ -356,8 +357,12 @@ class App extends Component {
     if (tx.hash) {
         let receipt = await nervos.listeners.listenToTransactionReceipt(tx.hash);
         if (!receipt.errorMessage) {
-          alert("购买种子成功");
           this.updateCurrRoundInfo();
+
+          let addr = nervos.base.accounts.wallet[0].address;
+          let inform = {transactionHash: tx.hash, returnValues: {from: addr, name: "buySeed", treeID: treeID } };
+          this.setState({ eventList: this.state.eventList.concat([inform]) });
+
         } else {
           console.error(receipt.errorMessage)
         }
@@ -366,7 +371,7 @@ class App extends Component {
       }
   };
 
-  buyKettle = async (selectedKettleNum) => {
+  buyKettle = async (selectedKettleNum, treeID) => {
     const {
       accounts,
       contract,
@@ -382,8 +387,11 @@ class App extends Component {
       if (tx.hash) {
         let receipt = await nervos.listeners.listenToTransactionReceipt(tx.hash);
         if (!receipt.errorMessage) {
-          alert("浇水成功");
+
           this.updateCurrRoundInfo();
+          let addr = nervos.base.accounts.wallet[0].address;
+          let inform = {transactionHash: tx.hash, returnValues: {from: addr, name: "buyKettle", treeID: treeID } };
+          this.setState({ eventList: this.state.eventList.concat([inform]) });
         } else {
           console.error(receipt.errorMessage)
         }
@@ -395,7 +403,7 @@ class App extends Component {
     }
   };
 
-  buyShovel = async () => {
+  buyShovel = async(treeID) => {
     console.log('buyShovel');
     const {
       accounts,
@@ -413,8 +421,10 @@ class App extends Component {
       if (tx.hash) {
         let receipt = await nervos.listeners.listenToTransactionReceipt(tx.hash);
         if (!receipt.errorMessage) {
-          alert("铲子成功");
           this.updateCurrRoundInfo();
+          let addr = nervos.base.accounts.wallet[0].address;
+          let inform = {transactionHash: tx.hash, returnValues: {from: addr, name: "buyShovel", treeID: treeID } };
+          this.setState({ eventList: this.state.eventList.concat([inform]) });
         } else {
           console.error(receipt.errorMessage)
         }
@@ -446,7 +456,7 @@ class App extends Component {
   }
 
   updateCurrRoundInfo() {
-    alert(/updateCurrRoundInfo/)
+    console.log(/updateCurrRoundInfo/)
     this.getCurrRoundInfo();
     this.getPlayerExpectedReward();
     this.getPlayerEarnings();
@@ -488,7 +498,7 @@ class App extends Component {
     const { contract, accounts } = this.state;
     const reward = await contract.methods.getPlayerExpectedReward(accounts.wallet[0].address).call();
 
-    // if (!reward) return 0;
+    if (!reward) reward = 0;
 
     this.setState({
       myExpectedReward: this.convertBNWeiToEth(reward),

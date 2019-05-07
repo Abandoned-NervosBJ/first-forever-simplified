@@ -17,7 +17,7 @@ export default class App extends React.Component {
     let modalClass = bigBtn ? 'modal-btn modal-btn-big' : 'modal-btn';
     if (disabled) modalClass = modalClass + ' ' + 'modal-btn-disabled';
     let confirmBtn = hideConfirmBtn ? '' : (
-      <div className={modalClass} onClick={this.onClick.bind(this)}>
+      <div className={modalClass} onClick={this.onAction.bind(this)}>
         <img alt={'button'} src={'./images/btn-green.png'} className={'main-btn modal-btn-bg'} />
         <div className={'btn-text modal-btn-text'}>{btnText || '确 定'}</div>
       </div>
@@ -45,7 +45,8 @@ export default class App extends React.Component {
       </div>
     );
   }
-  onClick() {
+
+  onAction() {
     const { onClick, onClose } = this.props;
     if (typeof(onClick) === 'function') onClick();
     onClose();

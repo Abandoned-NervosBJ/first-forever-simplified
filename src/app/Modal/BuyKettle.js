@@ -6,25 +6,30 @@ export default class App extends React.Component {
     super();
     this.inputRef = React.createRef();
   }
+
   state = {
     kettleNum: 1
   }
+
   componentDidMount() {
     this.updateInput();
   }
+
   componentWillUnmount() {
     this.setState({
       kettleNum: 1
     })
   }
+
   render() {
     const {
       treeID,
       price,
-      kettleTime
+      kettleTime,
     } = this.props;
 
     const { kettleNum } = this.state;
+
     const input = (
       <div className={'kettle-input-container'}>
         <img alt={'button'} src={'./images/btn-substract.png'} className={'kettle-input-btn btn-substract'} onClick={this.substract} />
@@ -32,6 +37,7 @@ export default class App extends React.Component {
         <img alt={'button'} src={'./images/btn-add.png'} className={'kettle-input-btn btn-add'} onClick={this.add} />
       </div>
     )
+
     const body =(
       <div>
         <div className={'mb10'}>对{treeID + 1}号树进行第{kettleTime + 1}次浇水</div>
@@ -41,12 +47,15 @@ export default class App extends React.Component {
         <div  className={'mt10'}>(浇{kettleNum}次水，消耗{kettleNum * price}wei)</div>
       </div>
     )
-    return <ModalContainer {...this.props} onClick={this.onClick} body={body} />;
+
+    return <ModalContainer {...this.props} onClick={this.onAction()} body={body} />;
   }
-  onClick = () => {
+
+  onAction = () => {
     console.log('buykettle, onclick: ', this.state.kettleNum)
-    this.props.onClick(this.state.kettleNum);
+    this.props.onClick(this.state.kettleNum, this.props.treeID);
   }
+
   substract = () => {
     let value = parseInt(this.state.kettleNum, 10) - 1;
     console.log('substract', value)
@@ -55,6 +64,7 @@ export default class App extends React.Component {
       kettleNum: value
     }, this.updateInput);
   }
+
   add = () => {
     const value = parseInt(this.state.kettleNum, 10) + 1;
     console.log('add', value)
@@ -62,10 +72,12 @@ export default class App extends React.Component {
       kettleNum: value
     }, this.updateInput);
   }
+
   updateInput(num = 1) {
     if (!this.inputRef.current) return;
     this.inputRef.current.value = parseInt(this.state.kettleNum, 10) || num;
   }
+
   onChange = (e) => {
     console.log('onchange', e.target.value)
     let value = parseInt(e.target.value, 10);
@@ -74,4 +86,5 @@ export default class App extends React.Component {
       kettleNum: value
     }, this.updateInput);
   }
+
 }
