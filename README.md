@@ -1,10 +1,16 @@
 
-最终的代码可以参考：[first-forever-simplified](https://github.com/NervosBeijingCommunity/first-forever-simplified) 遇到问题如果短时间搞不定，可以参考上面的代码，运行命令：
+最终的代码可以参考：[bigtree](https://github.com/NervosBeijingCommunity/first-forever-simplified/tree/bigtree) 遇到问题如果短时间搞不定，可以参考上面的代码，运行命令：
 
 ```
 npm install && npm start
 ```
-应该就可以将app跑起来了。
+
+app应该就能运行起来了。
+
+有个线上演示版本 https://bigtree-1258120565.cos-website.ap-beijing.myqcloud.com/
+
+## 游戏规则
+[Bigtree游戏规则](./game.md)
 
 ## 0 环境安装
 ### 操作系统
@@ -45,6 +51,7 @@ npm install create-react-app -g # g是global的缩写，即全局的意思
 **教练**：解释一下什么是npm和package？
 
 ##########################成功日志##########################
+
 Success! Created bigtree at ~/bigtree
 Inside that directory, you can run several commands:
 
@@ -67,6 +74,7 @@ We suggest that you begin by typing:
   yarn start
 
 Happy hacking!
+
 ##########################成功日志##########################
 
 在命令行运行如下命令，创建项目：
@@ -86,10 +94,12 @@ npm install @cryptape/cita-sdk --save
 ```
 
 ##########################成功日志##########################
+
 + @cryptape/cita-sdk@0.23.0
 
 added 366 packages from 306 contributors, removed 426 packages, updated 1286 packages in 194.168s
 found 2 high severity vulnerabilities
+
 ##########################成功日志##########################
 
 如果有如下错误提示：
@@ -364,21 +374,25 @@ module.exports = config
 
 ## 4 与合约交互
 
-清空`src/App.js`文件内容，并添加如下代码：
+添加需要用到的npm package
 
 ```
-// src/App.js
-
+npm install react-countdown-now --save
+npm install autoscroll-react --save
 ```
 
-清空`src/App.css`文件内容，并添加如下代码：
+清空`src/App.js`文件内容，将 https://github.com/NervosBeijingCommunity/first-forever-simplified/blob/bigtree/src/App.js 复制代码到这个文件。
 
-```
+清空`src/App.css`文件内容，将 https://github.com/NervosBeijingCommunity/first-forever-simplified/blob/bigtree/src/App.css 复制代码到这个文件
 
-```
+额外需要添加的文件夹： **手动复制**
 
-回到浏览器中，查看页面，如下图所示。这时就可以添加文字并提交到区块链了，刷新页面后就可以看到最新添加的文字了。
+`src/images`
+`public/images`
+`src/app`
 
-![图片](./example/img/finish.png)
+回到浏览器中，刷新页面，如下图所示，就可以游戏了。
+
+![图片](./example/img/bigtree.png)
 
 恭喜你，完成了一个完整的DApp！
