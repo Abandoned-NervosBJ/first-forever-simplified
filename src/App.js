@@ -14,6 +14,10 @@ import WithdrawModal from './app/Modal/Withdraw';
 import './App.css';
 /////
 
+window.addEventListener('citaWebDebuggerReady', () => {
+    window.addMessenger(nervos);
+    nervos.base.getDefaultAccount().then(defaultAccount => console.info("cita addr >>>>", defaultAccount))
+})
 
 const treeNum = 9;
 
